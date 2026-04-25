@@ -453,7 +453,7 @@ function adminSettings(){
 // ============================================
 
 // 🔗 HF Space API 地址（已部署）
-const AI_API_URL='https://Chaiwenliang-chaiwenliang.hf.space/chat';
+const AI_API_URL='https://Chaiwenliang-chaiwenliang.hf.space/query';
 
 // AI 对话历史（跨 render 保持）
 let aiHistory=[];
