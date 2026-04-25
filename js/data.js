@@ -5,6 +5,7 @@
 
 const DataManager = {
   STORAGE_KEY: 'portfolio_data',
+  DATA_VERSION: 3, // 每次修改默认数据时递增此版本号
 
   // 默认数据结构
   defaults: {
@@ -185,10 +186,30 @@ const DataManager = {
     return this.getAll();
   },
 
-  // 初始化（如果无数据则写入默认值）
+  // 初始化（如果无数据则写入默认值，版本升级时自动合并 profile 字段）
   init() {
-    if (!localStorage.getItem(this.STORAGE_KEY)) {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    const verKey = this.STORAGE_KEY + '_v';
+    const curVer = parseInt(localStorage.getItem(verKey) || '0');
+
+    if (!stored) {
       this.saveAll(this.defaults);
+      localStorage.setItem(verKey, String(this.DATA_VERSION));
+      return this.getAll();
+    }
+
+    // 版本升级：自动合并 profile 中的新默认值（保留用户已修改的其他数据）
+    if (curVer < this.DATA_VERSION) {
+      try {
+        const old = JSON.parse(stored);
+        // 用默认值覆盖 profile（确保 name/email/github 等最新）
+        old.profile = { ...this.defaults.profile, ...old.profile };
+        this.saveAll(old);
+        localStorage.setItem(verKey, String(this.DATA_VERSION));
+        console.log(`数据已升级到 v${this.DATA_VERSION}`);
+      } catch (e) {
+        console.error('数据升级失败:', e);
+      }
     }
     return this.getAll();
   }
