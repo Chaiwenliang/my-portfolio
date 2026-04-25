@@ -15,7 +15,7 @@ const DataManager = {
       bio: '热爱技术与设计，致力于创造优雅的数字体验。专注于前端开发、UI设计和用户体验优化。',
       location: '📍 中国',
       email: 'cwl5294519@gmail.com',
-      github: 'https://github.com',
+      github: 'https://github.com/Chaiwenliang',
       twitter: '',
       linkedin: '',
       website: ''
