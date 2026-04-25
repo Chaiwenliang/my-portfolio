@@ -14,7 +14,7 @@ const DataManager = {
       avatar: '',
       bio: '热爱技术与设计，致力于创造优雅的数字体验。专注于前端开发、UI设计和用户体验优化。',
       location: '📍 中国',
-      email: 'hello@example.com',
+      email: 'cwl5294519@gmail.com',
       github: 'https://github.com',
       twitter: '',
       linkedin: '',
