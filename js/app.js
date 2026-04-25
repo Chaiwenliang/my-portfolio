@@ -423,8 +423,8 @@ function adminSettings(){
 // AI 助手 - 全站检索 + RAG 数字分身
 // ============================================
 
-// 🔗 HF Space API 地址（部署后自动对接）
-const AI_API_URL='https://chaiwenliang-chaiwenliang.hf.space/chat';
+// 🔗 HF Space API 地址（已部署）
+const AI_API_URL='https://Chaiwenliang-chaiwenliang.hf.space/chat';
 
 function initAI(){
   const fab=$('#aiFab'),panel=$('#aiPanel'),close=$('#aiClose'),input=$('#aiInput'),send=$('#aiSend'),msgs=$('#aiMsgs');
@@ -481,7 +481,7 @@ function initAI(){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
-          query:q,
+          question:q,
           context:getSiteContext(),
           history:history.slice(0,-1),
           persona:getPersona()
@@ -489,7 +489,7 @@ function initAI(){
       });
       if(!res.ok)throw new Error(`HTTP ${res.status}`);
       const data=await res.json();
-      const reply=data.reply||data.answer||data.message||data.content||'暂时无法回答，请稍后再试。';
+      const reply=data.reply||data.response||data.answer||data.message||data.content||'暂时无法回答，请稍后再试。';
       removeTyping();
       addMsg('bot',reply);
       history.push({role:'assistant',content:reply,time:Date.now()});
