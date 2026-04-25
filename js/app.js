@@ -248,7 +248,33 @@ function vMe(d){
   <p style="text-align:center;color:var(--t3);font-size:.75rem;padding:16px 0">${d.site.footer}</p>
 </div>`}
 
-function bindMe(){$$('.ae').forEach(b=>b.onclick=()=>openAdmin(b.dataset.p))}
+function bindMe(){$$('.ae').forEach(b=>b.onclick=()=>{if(checkAdminAuth())openAdmin(b.dataset.p)})}
+
+// ==================== 管理密码锁 ====================
+const ADMIN_PWD_KEY='admin_pwd';
+const ADMIN_AUTH_KEY='admin_auth';
+
+function checkAdminAuth(){
+  // 已验证过（本次会话）
+  if(sessionStorage.getItem(ADMIN_AUTH_KEY))return true;
+  // 首次使用：设置密码
+  if(!localStorage.getItem(ADMIN_PWD_KEY)){
+    const pwd=prompt('🔐 首次使用，请设置管理密码（至少4位）：');
+    if(!pwd||pwd.length<4){toast('密码不能少于4位','err');return false}
+    localStorage.setItem(ADMIN_PWD_KEY,pwd);
+    sessionStorage.setItem(ADMIN_AUTH_KEY,'1');
+    toast('密码设置成功 ✅');
+    return true;
+  }
+  // 验证密码
+  const input=prompt('🔐 请输入管理密码：');
+  if(input===localStorage.getItem(ADMIN_PWD_KEY)){
+    sessionStorage.setItem(ADMIN_AUTH_KEY,'1');
+    return true;
+  }
+  toast('密码错误','err');
+  return false;
+}
 
 // ==================== 管理后台 ====================
 function openAdmin(p){
@@ -378,11 +404,13 @@ function adminSettings(){
   </form>
   <div class="sep"></div>
   <div style="display:flex;flex-direction:column;gap:8px">
+    <button class="btn btn--o btn--full" id="chgpwd">修改管理密码</button>
     <button class="btn btn--o btn--full" id="exp">导出数据</button>
     <label class="btn btn--o btn--full" style="cursor:pointer">导入数据<input type="file" accept=".json" id="imp" style="display:none"></label>
     <button class="btn btn--full" id="rst" style="border:1px solid var(--red);color:var(--red)">重置所有数据</button>
   </div>`);
   $('#f').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target);DataManager.update('site',{title:fd.get('title'),description:fd.get('description'),footer:fd.get('footer')});toast('已保存');document.title=fd.get('title')||'我的个人网站';render()};
+  $('#chgpwd').onclick=()=>{const old=prompt('请输入当前密码：');if(old!==localStorage.getItem(ADMIN_PWD_KEY)){toast('当前密码错误','err');return}const n=prompt('请输入新密码（至少4位）：');if(!n||n.length<4){toast('密码不能少于4位','err');return}localStorage.setItem(ADMIN_PWD_KEY,n);toast('密码已修改 ✅')};
   $('#exp').onclick=()=>{DataManager.exportData();toast('已导出')};
   $('#imp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{await DataManager.importData(f);toast('导入成功');setTimeout(()=>location.reload(),1200)}catch(err){toast('失败: '+err.message,'err')}};
   $('#rst').onclick=()=>{if(confirm('确定重置？不可撤销！')){DataManager.reset();toast('已重置');setTimeout(()=>location.reload(),1200)}};
