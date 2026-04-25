@@ -52,14 +52,14 @@ function vHome(d){
   const p=d.profile,proj=d.projects.filter(x=>x.featured).slice(0,3),posts=d.posts.filter(x=>x.published).slice(0,3);
   return `<div class="pg">
   <!-- Hero -->
-  <div class="fi" style="text-align:center;padding:20px 0 32px">
-    <div class="avatar avatar--lg" style="margin:0 auto 16px">${p.avatar?`<img src="${p.avatar}">`:p.name.charAt(0)}</div>
-    <h1 style="font-size:1.6rem;font-weight:700;letter-spacing:-.03em">${p.name}</h1>
-    <p style="color:var(--t2);font-size:.88rem;margin-top:4px;font-weight:500">${p.title}</p>
-    <p style="color:var(--t3);font-size:.82rem;margin:12px auto 0;max-width:300px;line-height:1.7">${p.bio}</p>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:20px">
-      ${p.github?`<a href="${p.github}" target="_blank" class="btn btn--o btn--sm">GitHub</a>`:''}
-      ${p.email?`<a href="mailto:${p.email}" class="btn btn--o btn--sm">邮箱</a>`:''}
+  <div class="fi" style="text-align:center;padding:28px 0 24px">
+    <div class="avatar avatar--lg" style="margin:0 auto 14px">${p.avatar?`<img src="${p.avatar}">`:p.name.charAt(0)}</div>
+    <h1 style="font-size:1.5rem;font-weight:700;letter-spacing:-.02em">${p.name}</h1>
+    <p style="color:var(--t2);font-size:.85rem;margin-top:3px;font-weight:500">${p.title}</p>
+    <p style="color:var(--t2);font-size:.82rem;margin:10px auto 0;max-width:280px;line-height:1.65">${p.bio}</p>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+      ${p.github?`<a href="${p.github}" target="_blank" class="btn btn--b btn--sm" style="gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> GitHub</a>`:''}
+      ${p.email?`<a href="mailto:${p.email}" class="btn btn--o btn--sm">📧 邮箱</a>`:''}
     </div>
   </div>
 
@@ -67,33 +67,35 @@ function vHome(d){
   <div class="ai-card fi">
     <div class="ai-card__hd">
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:1rem">🤖</span>
+        <div class="ai-card__icon">✦</div>
         <div>
-          <div style="font-weight:600;font-size:.85rem">AI 助手</div>
-          <div style="font-size:.7rem;color:var(--t3)">问我任何关于这个网站的问题</div>
+          <div style="font-weight:600;font-size:.82rem;letter-spacing:-.01em">AI 助手</div>
+          <div style="font-size:.68rem;color:var(--t3)">问我任何关于这个网站的问题</div>
         </div>
       </div>
       <div class="ai-card__status" id="aiStatus"></div>
     </div>
     <div class="ai-card__msgs" id="aiMsgs">
       <div class="ai-msg ai-msg--bot">
-        <div class="ai-msg__bubble">👋 你好！我是 AI 助手，可以帮你了解项目、文章或关于我的信息。试试问我「有哪些项目？」</div>
+        <div class="ai-msg__bubble">👋 你好！可以问我关于项目、文章或任何问题。试试「有哪些项目？」</div>
       </div>
     </div>
     <div class="ai-card__input">
       <input type="text" class="ai-input" id="aiInput" placeholder="输入你的问题..." autocomplete="off">
       <button class="ai-send" id="aiSend">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </div>
   </div>
 
+  <div class="spacer"></div>
+
   <!-- 快捷入口 -->
-  <div class="fi d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px">
-    <button onclick="go('works')" class="cd" style="text-align:center;padding:16px 6px;transition:transform .15s"><div style="font-size:1.4rem;margin-bottom:4px">🚀</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">项目</div></button>
-    <button onclick="go('blog')" class="cd" style="text-align:center;padding:16px 6px;transition:transform .15s"><div style="font-size:1.4rem;margin-bottom:4px">📝</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">博客</div></button>
-    <button onclick="go('me')" class="cd" style="text-align:center;padding:16px 6px;transition:transform .15s"><div style="font-size:1.4rem;margin-bottom:4px">😊</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">关于</div></button>
-    <a href="mailto:${p.email}" class="cd" style="text-align:center;padding:16px 6px;transition:transform .15s"><div style="font-size:1.4rem;margin-bottom:4px">💬</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">联系</div></a>
+  <div class="fi d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:0">
+    <button onclick="go('works')" class="cd" style="text-align:center;padding:14px 6px"><div style="font-size:1.3rem;margin-bottom:3px">🚀</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">项目</div></button>
+    <button onclick="go('blog')" class="cd" style="text-align:center;padding:14px 6px"><div style="font-size:1.3rem;margin-bottom:3px">📝</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">博客</div></button>
+    <button onclick="go('me')" class="cd" style="text-align:center;padding:14px 6px"><div style="font-size:1.3rem;margin-bottom:3px">😊</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">关于</div></button>
+    <a href="mailto:${p.email}" class="cd" style="text-align:center;padding:14px 6px"><div style="font-size:1.3rem;margin-bottom:3px">💬</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">联系</div></a>
   </div>
 
   <!-- 精选项目 -->
@@ -102,13 +104,13 @@ function vHome(d){
     <div class="hd"><h2>精选项目</h2><p>代表性项目</p></div>
     <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory">
       ${proj.map((pr,i)=>`
-        <div class="cd" style="min-width:240px;flex-shrink:0;padding:0;overflow:hidden;scroll-snap-align:start;transition:transform .2s">
-          <div style="height:120px;background:#f5f5f7;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <div class="cd" style="min-width:220px;flex-shrink:0;padding:0;overflow:hidden;scroll-snap-align:start">
+          <div style="height:110px;background:#f5f5f7;display:flex;align-items:center;justify-content:center;overflow:hidden">
             ${pr.image?`<img src="${pr.image}" style="width:100%;height:100%;object-fit:cover" loading="lazy">`:`<span style="font-size:2rem">${['🎨','🤖','📱','📊','🎮','🌐'][i%6]}</span>`}
           </div>
-          <div style="padding:14px 16px">
-            <h3 style="font-weight:600;font-size:.92rem">${pr.title}</h3>
-            <p style="font-size:.78rem;color:var(--t2);margin-top:4px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${pr.description}</p>
+          <div style="padding:12px 14px">
+            <h3 style="font-weight:600;font-size:.88rem">${pr.title}</h3>
+            <p style="font-size:.76rem;color:var(--t2);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${pr.description}</p>
             <div class="tags" style="margin-top:10px">${pr.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
           </div>
         </div>
