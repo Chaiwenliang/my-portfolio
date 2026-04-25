@@ -5,7 +5,7 @@
 
 const DataManager = {
   STORAGE_KEY: 'portfolio_data',
-  DATA_VERSION: 4, // 每次修改默认数据时递增此版本号
+  DATA_VERSION: 5, // 每次修改默认数据时递增此版本号
 
   // 默认数据结构
   defaults: {
@@ -202,8 +202,8 @@ const DataManager = {
     if (curVer < this.DATA_VERSION) {
       try {
         const old = JSON.parse(stored);
-        // 默认值覆盖旧值（确保代码中的最新 profile 生效），保留用户自定义的其他字段
-        old.profile = { ...old.profile, ...this.defaults.profile };
+        // 直接用默认 profile 覆盖，确保 name/email/github 等一定是最新值
+        old.profile = JSON.parse(JSON.stringify(this.defaults.profile));
         this.saveAll(old);
         localStorage.setItem(verKey, String(this.DATA_VERSION));
         console.log(`数据已升级到 v${this.DATA_VERSION}`);
