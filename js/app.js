@@ -43,6 +43,7 @@ function go(t){$$('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));c
 function render(){
   const d=DataManager.getAll();
   $('#app').innerHTML={home:vHome,works:vWorks,blog:vBlog,me:vMe}[cur](d);
+  if(cur==='home')initAI();
   if(cur==='me')bindMe();
   if(cur==='me')setTimeout(()=>{$$('.sk__f').forEach(b=>{b.style.width=b.dataset.lv+'%'})},200);
 }
@@ -445,7 +446,7 @@ function adminSettings(){
 }
 
 // ---- Init ----
-(function(){const s=DataManager.get('site');if(s)document.title=s.title||'我的个人网站';render();initAI()})();
+(function(){const s=DataManager.get('site');if(s)document.title=s.title||'我的个人网站';render()})();
 
 // ============================================
 // AI 助手 - 全站检索 + RAG 数字分身
@@ -454,19 +455,20 @@ function adminSettings(){
 // 🔗 HF Space API 地址（已部署）
 const AI_API_URL='https://Chaiwenliang-chaiwenliang.hf.space/chat';
 
+// AI 对话历史（跨 render 保持）
+let aiHistory=[];
+const AI_MAX_HISTORY=20;
+
 function initAI(){
   const input=$('#aiInput'),send=$('#aiSend'),msgs=$('#aiMsgs'),status=$('#aiStatus');
-  if(!input)return; // 非首页时不初始化
-  // 对话历史（最多保留 20 轮）
-  const history=[];
-  const MAX_HISTORY=20;
+  if(!input)return;
 
   function handleSend(){
     const q=input.value.trim();if(!q)return;
     input.value='';
     addMsg('user',q);
-    history.push({role:'user',content:q,time:Date.now()});
-    if(history.length>MAX_HISTORY)history.shift();
+    aiHistory.push({role:'user',content:q,time:Date.now()});
+    if(aiHistory.length>AI_MAX_HISTORY)aiHistory.shift();
     showTyping();
     processQuery(q);
   }
@@ -506,7 +508,7 @@ function initAI(){
         body:JSON.stringify({
           question:q,
           context:getSiteContext(),
-          history:history.slice(0,-1),
+          history:aiHistory.slice(0,-1),
           persona:getPersona()
         })
       });
@@ -515,8 +517,8 @@ function initAI(){
       const reply=data.reply||data.response||data.answer||data.message||data.content||'暂时无法回答，请稍后再试。';
       removeTyping();
       addMsg('bot',reply);
-      history.push({role:'assistant',content:reply,time:Date.now()});
-      if(history.length>MAX_HISTORY)history.shift();
+      aiHistory.push({role:'assistant',content:reply,time:Date.now()});
+      if(aiHistory.length>AI_MAX_HISTORY)aiHistory.shift();
       return;
     }catch(err){
       console.warn('API failed, fallback to local search:',err);
@@ -528,8 +530,8 @@ function initAI(){
     const result=localSearch(q);
     removeTyping();
     addMsg('bot',result);
-    history.push({role:'assistant',content:result,time:Date.now()});
-    if(history.length>MAX_HISTORY)history.shift();
+    aiHistory.push({role:'assistant',content:result,time:Date.now()});
+    if(aiHistory.length>AI_MAX_HISTORY)aiHistory.shift();
   }
 
   // ==================== 数据接口 ====================
