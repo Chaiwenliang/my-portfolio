@@ -63,6 +63,31 @@ function vHome(d){
     </div>
   </div>
 
+  <!-- AI 对话框（嵌入首页） -->
+  <div class="ai-card fi">
+    <div class="ai-card__hd">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:1rem">🤖</span>
+        <div>
+          <div style="font-weight:600;font-size:.85rem">AI 助手</div>
+          <div style="font-size:.7rem;color:var(--t3)">问我任何关于这个网站的问题</div>
+        </div>
+      </div>
+      <div class="ai-card__status" id="aiStatus"></div>
+    </div>
+    <div class="ai-card__msgs" id="aiMsgs">
+      <div class="ai-msg ai-msg--bot">
+        <div class="ai-msg__bubble">👋 你好！我是 AI 助手，可以帮你了解项目、文章或关于我的信息。试试问我「有哪些项目？」</div>
+      </div>
+    </div>
+    <div class="ai-card__input">
+      <input type="text" class="ai-input" id="aiInput" placeholder="输入你的问题..." autocomplete="off">
+      <button class="ai-send" id="aiSend">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
   <!-- 快捷入口 -->
   <div class="fi d2" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px">
     <button onclick="go('works')" class="cd" style="text-align:center;padding:16px 6px;transition:transform .15s"><div style="font-size:1.4rem;margin-bottom:4px">🚀</div><div style="font-size:.7rem;color:var(--t2);font-weight:500">项目</div></button>
@@ -427,20 +452,11 @@ function adminSettings(){
 const AI_API_URL='https://Chaiwenliang-chaiwenliang.hf.space/chat';
 
 function initAI(){
-  const fab=$('#aiFab'),panel=$('#aiPanel'),close=$('#aiClose'),input=$('#aiInput'),send=$('#aiSend'),msgs=$('#aiMsgs');
-  let open=false;
+  const input=$('#aiInput'),send=$('#aiSend'),msgs=$('#aiMsgs'),status=$('#aiStatus');
+  if(!input)return; // 非首页时不初始化
   // 对话历史（最多保留 20 轮）
   const history=[];
   const MAX_HISTORY=20;
-
-  function toggle(){
-    open=!open;
-    panel.classList.toggle('open',open);
-    fab.classList.toggle('hidden',open);
-    if(open)setTimeout(()=>input.focus(),350);
-  }
-  fab.onclick=toggle;
-  close.onclick=toggle;
 
   function handleSend(){
     const q=input.value.trim();if(!q)return;
@@ -463,12 +479,16 @@ function initAI(){
   }
 
   function showTyping(){
+    if(status)status.innerHTML='<span class="ai-status-dot"></span> 思考中';
     const d=document.createElement('div');
     d.className='ai-msg ai-msg--bot';d.id='aiTyping';
     d.innerHTML='<div class="ai-msg__avatar">🤖</div><div class="ai-typing"><span></span><span></span><span></span></div>';
     msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
   }
-  function removeTyping(){const el=$('#aiTyping');if(el)el.remove()}
+  function removeTyping(){
+    if(status)status.innerHTML='';
+    const el=$('#aiTyping');if(el)el.remove();
+  }
 
   // ==================== 核心查询处理 ====================
   async function processQuery(q){
