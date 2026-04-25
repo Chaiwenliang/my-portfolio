@@ -64,6 +64,7 @@ function vHome(d){
   </div>
 
   <!-- AI 对话框（嵌入首页） -->
+  <div style="margin-top:20px"></div>
   <div class="ai-card fi">
     <div class="ai-card__hd">
       <div style="display:flex;align-items:center;gap:8px">
