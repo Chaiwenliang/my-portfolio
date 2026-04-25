@@ -9,7 +9,7 @@ const DataManager = {
   // 默认数据结构
   defaults: {
     profile: {
-      name: '你的名字',
+      name: 'Chaiwenliang',
       title: '全栈开发者 / 创意设计师',
       avatar: '',
       bio: '热爱技术与设计，致力于创造优雅的数字体验。专注于前端开发、UI设计和用户体验优化。',
